@@ -13,6 +13,8 @@ namespace Cognifide.PowerShell.Commandlets.Interactive
     [OutputType(typeof(string))]
     public class UpdateListViewCommand : BaseListViewCommand
     {
+        private const string expirationSetting = "Cognifide.PowerShell.ListViewDataExpirationMinutes";
+
         public class UpdateListViewData
         {
             public List<DataObject> CumulativeData { get; set; } = new List<DataObject>();
@@ -50,8 +52,9 @@ namespace Cognifide.PowerShell.Commandlets.Interactive
                     IconChange = IsParameterSpecified(nameof(Icon)),
                     Icon = Icon
                 };
+                var expiration = Sitecore.Configuration.Settings.GetIntSetting(expirationSetting, 1);
                 HttpRuntime.Cache.Add($"allDataInternal|{HostData.SessionId}", updateData, null,
-                    Cache.NoAbsoluteExpiration, new TimeSpan(0, 1, 0), CacheItemPriority.Normal, null);
+                    Cache.NoAbsoluteExpiration, new TimeSpan(0, expiration, 0), CacheItemPriority.Normal, null);
                 var message = Message.Parse(null, "pslv:update");
                 message.Arguments.Add("ScriptSession.Id", HostData.SessionId);
                 PutMessage(new SendMessageMessage(message, false));
