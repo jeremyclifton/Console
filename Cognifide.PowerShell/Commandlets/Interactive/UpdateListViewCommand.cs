@@ -54,7 +54,7 @@ namespace Cognifide.PowerShell.Commandlets.Interactive
                 };
                 var expiration = Sitecore.Configuration.Settings.GetIntSetting(expirationSetting, 1);
                 HttpRuntime.Cache.Add($"allDataInternal|{HostData.SessionId}", updateData, null,
-                    Cache.NoAbsoluteExpiration, new TimeSpan(0, expiration, 0), CacheItemPriority.Normal, null);
+                    Cache.NoAbsoluteExpiration, new TimeSpan(0, expiration, 0), CacheItemPriority.NotRemovable, null);
                 var message = Message.Parse(null, "pslv:update");
                 message.Arguments.Add("ScriptSession.Id", HostData.SessionId);
                 PutMessage(new SendMessageMessage(message, false));
